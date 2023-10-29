@@ -1,5 +1,5 @@
 
-document.body.innerHTML = '<style>div{color: grey;text-align:center;position:absolute;margin:auto;top:0;right:0;bottom:0;left:0;width:500px;height:100px;}</style><body><div id="loading"><h1>TEMPLATE</h1><p>This could take a while, please give it at least 5 minutes to render.</p><br><h1 class="spin">⏳</h1><br><h3>Press <strong>?</strong> for shortcut keys</h3><br><p><small>Output contains an embedded blueprint for creating an IRL wall sculpture</small></p></div></body>';
+document.body.innerHTML = '<style>div{color: grey;text-align:center;position:absolute;margin:auto;top:0;right:0;bottom:0;left:0;width:500px;height:100px;}</style><body><div id="loading"><h1>WAVELENGTH</h1><p>This could take a while, please give it at least 5 minutes to render.</p><br><h1 class="spin">⏳</h1><br><h3>Press <strong>?</strong> for shortcut keys</h3><br><p><small>Output contains an embedded blueprint for creating an IRL wall sculpture</small></p></div></body>';
 paper.install(window);
 window.onload = function() {
 
@@ -84,7 +84,7 @@ var testingGo = new URLSearchParams(window.location.search).get('testing');// Ru
 
 var frC = R.random_int(1, 3); //random frame color white, mocha, or rainbow
 var orient=R.random_int(1, 4); // decide on orientation 
-//orient=2;
+orient=1;
 var halfsize = R.random_int(1, 5);
 
 //Set the properties for the artwork where 100 = 1 inch
@@ -101,7 +101,7 @@ var scale = 2;
 
 var ratio = 1/scale;//use 1/4 for 32x40 - 1/3 for 24x30 - 1/2 for 16x20 - 1/1 for 8x10
 
-var minOffset = ~~(7*ratio); //this is aproximatly .125"
+var minOffset = ~~(8*ratio); //this is aproximatly .125"
 var framewidth = ~~(R.random_int(125, 200)*ratio); 
 //var framewidth = 50; 
     if (qfw){framewidth=qfw};
@@ -124,7 +124,7 @@ var colors = []; var palette = [];
 var woodframe = new Path();var framegap = new Path();
 
 
-numofcolors = R.random_int(2, stacks);; //Sets the number of colors to pick for the pallete
+numofcolors = R.random_int(2, 3);; //Sets the number of colors to pick for the pallete
 //numofcolors = $fx.getParam("number_colors");
 if (qc){numofcolors = qc};
 console.log(numofcolors+" colors");
@@ -173,8 +173,9 @@ linecolor={"Hex":"#4C4638", "Name":"Mocha"};
 
 sheet = []; //This will hold each layer
 
-var px=0;var py=0;var pz=0;var prange=.1; 
-
+var px=0;var py=0;var pz=0;var prange=.1; var pl=0;
+var li = R.random_int(5, 12);
+var gap = ~~(wide/(li+1));
 
 
 //---- Draw the Layers
@@ -188,10 +189,20 @@ for (z = 0; z < stacks; z++) {
          //-----Draw each layer
         if(z<stacks-1 && z!=0 ){
             if (z==stacks-2){oset = minOffset}else{oset = ~~(minOffset*(stacks-z-1))}
-            var li = R.random_int(12, 12);
-            for (l=0;l<li;l++){
-                somelines(z); 
+            
+
+            for (l=1;l<li+1;l++){
+                pl=pl*prange;
+                amp = ~~(noise.get(pl,pz)*(gap*.8))
+                wavel = ~~(noise.get(l,pz)*100)
+                gapit = ~~(noise.get(l)*200)
+                wavelet (z,gap*l,amp,wavel,framewidth+gapit)
+
+
             }
+
+             
+                
             
 
         }
@@ -269,6 +280,35 @@ function somelines(z){
         mesh.remove();
 
     
+}
+
+
+function wavelet (z,x,amplitude,wavelength,starty){
+    p = []
+    pp=1;
+    p[0] = new Point(x,starty);
+    for (yp=starty+wavelength; yp<high-starty; yp=yp+wavelength){
+        if (pp%2 == 0){p[pp]=new Point(x+amplitude,yp);} else {p[pp]=new Point(x-amplitude,yp);}
+        if (yp+wavelength > high-starty-1){p[pp]=new Point(x,yp);}
+        pp=pp+1;
+    }  
+
+
+    lines = new Path.Line (p[0],p[1]); 
+     for (i=2; i<p.length; i++){
+        lines.add(p[i]);
+     }
+
+    lines.smooth();
+    lines.add(new Point(x,high))
+    lines.insert(0,new Point(x,0)) 
+
+    mesh = PaperOffset.offsetStroke(lines, minOffset,{ cap: 'butt' });
+    
+    lines.remove();
+    join(z,mesh); 
+    mesh.remove();
+
 }
 
 
