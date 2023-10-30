@@ -85,7 +85,7 @@ var testingGo = new URLSearchParams(window.location.search).get('testing');// Ru
 var frC = R.random_int(1, 3); //random frame color white, mocha, or rainbow
 var orient=R.random_int(1, 4); // decide on orientation 
 orient=1;
-var halfsize = R.random_int(1, 5);
+var halfsize = R.random_int(2, 5);
 
 //Set the properties for the artwork where 100 = 1 inch
 var wide = 800; 
