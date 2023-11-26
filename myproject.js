@@ -192,10 +192,10 @@ for (z = 0; z < stacks; z++) {
             
 
             for (l=1;l<li+1;l++){
-                pl=pl*prange;
+                pl=l*.1;
                 amp = ~~(noise.get(pl,pz)*(gap*.8))
-                wavel = ~~(noise.get(l,pz)*100)
-                gapit = ~~(noise.get(l)*200)
+                wavel = ~~(noise.get(pl,pz)*100)
+                gapit = ~~(noise.get(pl)*(high/4))
                 wavelet (z,gap*l,amp,wavel,framewidth+gapit)
 
 
@@ -287,12 +287,23 @@ function wavelet (z,x,amplitude,wavelength,starty){
     p = []
     pp=1;
     p[0] = new Point(x,starty);
-    for (yp=starty+wavelength; yp<high-starty; yp=yp+wavelength){
+    startDirection = noise.get(x)*10
+    
+    if (startDirection > 5){
+        for (yp=starty+wavelength; yp<high-starty; yp=yp+wavelength){
         if (pp%2 == 0){p[pp]=new Point(x+amplitude,yp);} else {p[pp]=new Point(x-amplitude,yp);}
         if (yp+wavelength > high-starty-1){p[pp]=new Point(x,yp);}
         pp=pp+1;
-    }  
-
+        }  
+    }
+    
+    if (startDirection < 5){
+        for (yp=starty+wavelength; yp<high-starty; yp=yp+wavelength){
+            if (pp%2 == 0){p[pp]=new Point(x-amplitude,yp);} else {p[pp]=new Point(x+amplitude,yp);}
+            if (yp+wavelength > high-starty-1){p[pp]=new Point(x,yp);}
+            pp=pp+1;
+        }  
+    }
 
     lines = new Path.Line (p[0],p[1]); 
      for (i=2; i<p.length; i++){
@@ -302,8 +313,8 @@ function wavelet (z,x,amplitude,wavelength,starty){
     lines.smooth();
     lines.add(new Point(x,high))
     lines.insert(0,new Point(x,0)) 
-
-    mesh = PaperOffset.offsetStroke(lines, minOffset,{ cap: 'butt' });
+    osetit = minOffset 
+    mesh = PaperOffset.offsetStroke(lines, osetit,{ cap: 'butt' });
     
     lines.remove();
     join(z,mesh); 
