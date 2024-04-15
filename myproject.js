@@ -96,6 +96,8 @@ if (halfsize == 1 && orient != 2){wide=400;}
 var high = 1000; 
     if (qh){high=qh*100};
 
+
+
 var scale = 2; 
     if (qs){scale=qs};
 
