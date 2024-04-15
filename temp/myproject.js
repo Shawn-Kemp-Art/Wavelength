@@ -165,6 +165,8 @@ p=0;for (var c=0; c<stacks; c=c+1){colors[c] = palette[p];p=p+1;if(p==palette.le
 
 if (frC==1){colors[stacks-1]={"Hex":"#FFFFFF", "Name":"Smooth White"}};
 if (frC==2){colors[stacks-1]={"Hex":"#4C4638", "Name":"Mocha"}};
+
+colors[0]=colors[stacks-1];
     
 //Set the line color
 linecolor={"Hex":"#4C4638", "Name":"Mocha"};
@@ -188,6 +190,7 @@ var gap = ~~(wide/(li+1));
 for (z = 0; z < stacks; z++) {
     pz=z*prange;
     drawFrame(z); // Draw the initial frame
+    if(z==0) {solid(z)};
     //if(z==0){solid(z)}
 
          //-----Draw each layer
@@ -337,7 +340,7 @@ function wavelet (z,x,amplitude,wavelength,starty){
 //--------- Helper functions ----------------------- 
 
 function floatingframe(){
-    var frameWide=~~(75*ratio);var frameReveal = ~~(1*ratio);
+    var frameWide=~~(75*ratio);var frameReveal = ~~(2*ratio);
   if (framegap.isEmpty()){
         var outsideframe = new Path.Rectangle(new Point(0, 0),new Size(~~(wide+frameReveal*2), ~~(high+frameReveal*2)), framradius)
         var insideframe = new Path.Rectangle(new Point(frameReveal, frameReveal),new Size(wide, high)) 
@@ -356,7 +359,7 @@ function floatingframe(){
         woodframe.scale(2.2);
         woodframe.position = new Point(paper.view.viewSize.width/2, paper.view.viewSize.height/2);
         var framegroup = new Group(woodframe);
-        woodframe.style = {fillColor: '#60513D', strokeColor: "#60513D", strokeWidth: 1*ratio,shadowColor: new Color(0,0,0,[0.5]),shadowBlur: 20,shadowOffset: new Point(10*2.2, 10*2.2)};
+        woodframe.style = {fillColor: '#4b2110', strokeColor: "#4b2110", strokeWidth: 1*ratio,shadowColor: new Color(0,0,0,[0.5]),shadowBlur: 20,shadowOffset: new Point(10*2.2, 10*2.2)};
     } else {woodframe.removeChildren()} 
 }
 
